@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Play hand cricket online with friends using room codes.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>Hand Cricket Online</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Hand Cricket Online home">
+        <span class="brand-ball">🏏</span><span>HAND<span class="brand-accent">CRICKET</span></span>
+      </a>
+      <span class="online-pill"><i></i> ONLINE</span>
+    </header>
+
+    <section id="home" class="screen active">
+      <div class="hero">
+        <div class="eyebrow">THE CLASSIC GAME. PLAY WITH FRIENDS.</div>
+        <h1>Ready to<br><span>take the crease?</span></h1>
+        <p>Create a private room or enter your friend's code to start a match.</p>
+        <div class="hero-ball">🏏</div>
+      </div>
+
+      <div class="panel action-panel">
+        <button id="createBtn" class="primary-btn">＋ <span>Create a room</span></button>
+        <div class="or-divider"><span>OR JOIN A FRIEND</span></div>
+        <label class="field-label" for="joinCode">ROOM CODE</label>
+        <div class="join-row">
+          <input id="joinCode" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit code" autocomplete="one-time-code">
+          <button id="joinBtn" class="secondary-btn">Join</button>
+        </div>
+        <p id="homeMessage" class="message" aria-live="polite"></p>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">👆</div>
+        <div><strong>Pick a number from 1 to 6</strong><p>Same number means OUT. Different numbers add runs!</p></div>
+      </div>
+      <p class="footnote">Private rooms · 2 players · Free to play</p>
+    </section>
+
+    <section id="lobby" class="screen">
+      <button class="back-btn" data-go="home">← Home</button>
+      <div class="section-heading"><div class="eyebrow">PRIVATE MATCH</div><h2>Room lobby</h2><p>Share this code with your friend.</p></div>
+      <div class="room-code-card">
+        <span class="field-label">YOUR ROOM CODE</span>
+        <strong id="roomCodeDisplay">------</strong>
+        <button id="copyCodeBtn" class="copy-btn">Copy code</button>
+      </div>
+      <div class="panel lobby-panel">
+        <div class="player-line"><span class="avatar">👤</span><div><strong id="hostName">You</strong><small>Room creator</small></div><span class="ready-tag">CONNECTED</span></div>
+        <div class="player-line"><span class="avatar">👤</span><div><strong id="guestName">Waiting for player...</strong><small id="guestStatus">Share your code to invite a friend</small></div><span id="guestTag" class="waiting-tag">WAITING</span></div>
+        <button id="startMatchBtn" class="primary-btn" disabled>Waiting for opponent</button>
+        <p id="lobbyMessage" class="message" aria-live="polite"></p>
+      </div>
+      <p class="footnote">Both players need to keep the game open while playing.</p>
+    </section>
+
+    <section id="match" class="screen">
+      <div class="match-top">
+        <button class="back-btn" data-go="home">← Leave</button>
+        <span id="inningsLabel" class="innings-pill">1ST INNINGS</span>
+      </div>
+      <div class="scoreboard">
+        <div><small id="battingName">YOU BATTING</small><div class="score"><span id="runs">0</span><small>/<span id="wickets">0</span></small></div><small id="overs">0.0 overs</small></div>
+        <div class="target-box"><small>TARGET</small><strong id="target">—</strong></div>
+      </div>
+      <div class="match-status" id="matchStatus">Choose your number</div>
+      <div class="number-panel panel">
+        <p id="turnPrompt">Tap a number to play your shot</p>
+        <div class="number-grid">
+          <button class="number-btn" data-number="1">1</button><button class="number-btn" data-number="2">2</button>
+          <button class="number-btn" data-number="3">3</button><button class="number-btn" data-number="4">4</button>
+          <button class="number-btn" data-number="5">5</button><button class="number-btn" data-number="6">6</button>
+        </div>
+        <p id="roundMessage" class="round-message" aria-live="polite">Waiting for your turn…</p>
+        <div class="last-play"><span>You</span><strong id="myPick">—</strong><span>Opponent</span><strong id="theirPick">—</strong></div>
+      </div>
+      <div class="match-footer"><span>ROOM <strong id="matchRoomCode">------</strong></span><span id="connectionState">Connecting…</span></div>
+    </section>
+
+    <section id="result" class="screen">
+      <div class="result-emoji">🏆</div>
+      <div class="eyebrow">MATCH COMPLETE</div>
+      <h2 id="resultTitle">You won!</h2>
+      <p id="resultSubtitle">Great match.</p>
+      <div class="result-score panel"><div><small>YOUR SCORE</small><strong id="yourFinalScore">0</strong></div><div><small>OPPONENT</small><strong id="opponentFinalScore">0</strong></div></div>
+      <button id="rematchBtn" class="primary-btn">Back to home</button>
+    </section>
+
+    <footer class="app-footer">HAND CRICKET ONLINE <span>•</span> V1.0</footer>
+  </main>
+
+  <div id="nameModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="eyebrow">BEFORE YOU PLAY</div><h2>What's your name?</h2>
+      <p>Choose a name your friend will see in the match.</p>
+      <input id="playerName" maxlength="16" placeholder="Your name" autocomplete="nickname">
+      <button id="saveNameBtn" class="primary-btn">Continue</button>
+      <p id="nameMessage" class="message"></p>
+    </div>
+  </div>
+
+  <div id="setupNotice" class="setup-notice hidden">
+    <div class="notice-card"><strong>Online setup needed</strong><p>This project needs your Supabase project URL and anon key. Add them in <code>config.js</code>, then reload.</p><button id="noticeClose" class="secondary-btn">Got it</button></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
